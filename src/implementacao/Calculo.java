@@ -21,13 +21,17 @@ public class Calculo {
             return "Os valores de entrada são inválidos";
         }
 
-        //g(n)
+        //g(n) - Ponto inicial
         int g = calculaDistancia(inicio, fim);
+        System.out.println("\nDistância: " + g + "\n");
+
+        ArrayList<String> caminho = new ArrayList<>();
+
 
         HashMap<String, ArrayList<String>> direcoes = Mapeamento.mapeiaDirecoes();
         // Calcular A* para cada direção
 
-        return "Distancia: " + g;
+        return null;
     }
 
     private static Integer calculaDistancia(String origem, String destino){
