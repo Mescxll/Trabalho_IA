@@ -15,11 +15,12 @@ public class Main {
         System.out.println("\nQual ponto você deseja alcançar [A-U]: ");
         String fim = scanner.nextLine();
 
-        System.out.println("Qual função heurística deve ser implementada?");
-        System.out.println("1. Distância Manhattan\n2.Distância Euclidiana\n3.Distância Chebyshev\n");
+        System.out.println("\nQual função heurística deve ser implementada?");
+        System.out.println("1. Distância Manhattan\n2. Distância Euclidiana\n3. Distância Chebyshev\n");
         System.out.println("Escolha [1-3]: ");
         int heuristica = scanner.nextInt();
 
+        System.out.println(" ");
         System.out.println(Calculo.calculaCaminho(inicio, fim, heuristica));
     }
 }

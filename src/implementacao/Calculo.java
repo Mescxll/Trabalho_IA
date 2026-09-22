@@ -1,6 +1,7 @@
 package implementacao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Calculo {
@@ -12,14 +13,43 @@ public class Calculo {
         h(n) = distância estimada de n ao nó pela função heurística
          */
     public static String calculaCaminho(String inicio, String fim, int heuristica) {
-        HashMap<String, ArrayList<String>> direcoes = Mapeamento.mapeiaDirecoes();
+        ArrayList<String> entradas = new ArrayList<>(Arrays.asList(
+                "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+                "N", "O", "P", "Q", "R", "S", "T", "U"
+        ));
+        if(!entradas.contains(inicio) || !entradas.contains(fim)){
+            return "Os valores de entrada são inválidos";
+        }
 
+        //g(n)
+        int g = calculaDistancia(inicio, fim);
+
+        HashMap<String, ArrayList<String>> direcoes = Mapeamento.mapeiaDirecoes();
         // Calcular A* para cada direção
-        return null;
+
+        return "Distancia: " + g;
     }
 
-    private Integer calculaDistancia(String origem, String destino){
-        return 0;
+    private static Integer calculaDistancia(String origem, String destino){
+        String[][] matriz = Mapeamento.mapeiaDistancia();
+
+        int origemX = -1, origemY = -1, destinoX = -1, destinoY = -1;
+
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                if (matriz[i][j].equals(origem)) {
+                    origemX = i;
+                    origemY = j;
+                }
+
+                if (matriz[i][j].equals(destino)) {
+                    destinoX = i;
+                    destinoY = j;
+                }
+            }
+        }
+
+        return Math.abs(origemX-destinoX)+Math.abs(origemY-destinoY);
     }
 
     /*
