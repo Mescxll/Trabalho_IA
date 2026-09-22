@@ -3,6 +3,7 @@ package implementacao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Calculo {
     /*
@@ -61,8 +62,16 @@ public class Calculo {
 
         h(n) = |x1 - x2| + |y1 - y2|
      */
-    private Integer calculaHeuristicaManhattan(String atual, String fim){
-        return 0;
+    private Integer calculaHeuristicaManhattan(String atual, String fim) {
+        String[][] matriz = Mapeamento.mapeiaDistancia();
+        int[] coordenadasAtual = getCoordenadas(matriz, atual);
+        int[] coordenadasFim = getCoordenadas(matriz, fim);
+        int y1 = coordenadasAtual[0];
+        int y2 = coordenadasFim[0];
+        int x1 = coordenadasAtual[1];
+        int x2 = coordenadasFim[1];
+
+        return Math.abs(x1 - x2) + Math.abs(y1 - y2);
     }
 
     /*
@@ -70,8 +79,16 @@ public class Calculo {
 
         h(n) = √(x1 − x2)^2 + (y1 − y2)^2
      */
-    private Integer calculaHeuristicaEuclidiana(String atual, String fim){
-        return 0;
+    private double calculaHeuristicaEuclidiana(String atual, String fim){
+        String[][] matriz = Mapeamento.mapeiaDistancia();
+        int[] coordenadasAtual = getCoordenadas(matriz, atual);
+        int[] coordenadasFim = getCoordenadas(matriz, fim);
+        int y1 = coordenadasAtual[0];
+        int y2 = coordenadasFim[0];
+        int x1 = coordenadasAtual[1];
+        int x2 = coordenadasFim[1];
+
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
     /*
@@ -79,7 +96,29 @@ public class Calculo {
 
         h(n) = max(|x1 − x2|, |y1 − y2|)
      */
-    private Integer calculaHeuristicaChebyshevs(String atual, String fim){
-        return 0;
+    private Integer calculaHeuristicaChebyshevs(String atual, String fim){        String[][] matriz = Mapeamento.mapeiaDistancia();
+        int[] coordenadasAtual = getCoordenadas(matriz, atual);
+        int[] coordenadasFim = getCoordenadas(matriz, fim);
+        int y1 = coordenadasAtual[0];
+        int y2 = coordenadasFim[0];
+        int x1 = coordenadasAtual[1];
+        int x2 = coordenadasFim[1];
+
+        return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
+    }
+
+    private static int[] getCoordenadas(String[][] distancias, String valor) {
+        int lin = 0, col = 0;
+        for(String[] i : distancias) {
+            for (String j: i) {
+                if (Objects.equals(valor, j)) {
+                    return new int[]{lin, col};
+                }
+                col++;
+            }
+            lin++;
+        }
+
+        return null;
     }
 }
