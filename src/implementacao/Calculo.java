@@ -11,7 +11,7 @@ public class Calculo {
         g(n) = distância acumulada de n ao nó inicial
         h(n) = distância estimada de n ao nó pela função heurística
          */
-    public static String calculaCaminho(String inicio, String fim) {
+    public static String calculaCaminho(String inicio, String fim, int heuristica) {
         HashMap<String, ArrayList<String>> direcoes = Mapeamento.mapeiaDirecoes();
 
         // Calcular A* para cada direção

@@ -1,4 +1,4 @@
-//import implementacao.Calculo;
+import implementacao.Calculo;
 import java.util.Scanner;
 
 public class Main {
@@ -8,13 +8,18 @@ public class Main {
         System.out.println("-------------------------");
         System.out.println("     Cidade Virtual      ");
         System.out.println("-------------------------\n");
-        System.out.println("De qual ponto deseja partir (A-U): ");
+        System.out.println("De qual ponto deseja partir [A-U]: ");
 
         String inicio = scanner.nextLine();
 
-        System.out.println("\nQual ponto você deseja alcançar (A-U): ");
+        System.out.println("\nQual ponto você deseja alcançar [A-U]: ");
         String fim = scanner.nextLine();
 
-        //System.out.println(Calculo.calculaCaminho(inicio, fim));
+        System.out.println("Qual função heurística deve ser implementada?");
+        System.out.println("1. Distância Manhattan\n2.Distância Euclidiana\n3.Distância Chebyshev\n");
+        System.out.println("Escolha [1-3]: ");
+        int heuristica = scanner.nextInt();
+
+        System.out.println(Calculo.calculaCaminho(inicio, fim, heuristica));
     }
 }
