@@ -1,4 +1,5 @@
 import implementacao.Calculo;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -21,6 +22,18 @@ public class Main {
         int heuristica = scanner.nextInt();
 
         System.out.println(" ");
-        System.out.println(Calculo.calculaCaminho(inicio, fim, heuristica));
+        String caminhoSimples = Calculo.calculaCaminho(inicio, fim, heuristica);
+        
+        if (caminhoSimples.equals("Caminho não encontrado")|| caminhoSimples.equals("Os valores de entrada são inválidos")) {
+            System.out.println(caminhoSimples);
+        } else {
+            ArrayList<String> caminho = editaString(caminhoSimples);
+            Calculo.apresentaTrajetoCusto(caminho);
+        }
+    
+        private static ArrayList<String> editaString(String caminhoSimples) {
+            String caminhoEditado = caminhoSimples.replace("[", "").replace("]", "").replace(" ", "");
+            return new ArrayList<>(Arrays.asList(caminhoEditado.split(",")));
+        }
     }
 }
