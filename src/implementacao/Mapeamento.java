@@ -33,7 +33,7 @@ public class Mapeamento {
         mapaDirecoes.put("J", new ArrayList<>(List.of("R")));
         mapaDirecoes.put("K", new ArrayList<>(Arrays.asList("J", "S")));
         mapaDirecoes.put("L", new ArrayList<>(Arrays.asList("H", "K")));
-        mapaDirecoes.put("M", new ArrayList<>(List.of("D")));
+        mapaDirecoes.put("M", new ArrayList<>(Arrays.asList("D", "L")));
         mapaDirecoes.put("N", new ArrayList<>(Arrays.asList("P", "M")));
         mapaDirecoes.put("O", new ArrayList<>(List.of("L")));
         mapaDirecoes.put("P", new ArrayList<>(Arrays.asList("U", "O")));
