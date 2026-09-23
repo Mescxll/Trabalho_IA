@@ -1,9 +1,7 @@
 package implementacao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Calculo {
     /*
@@ -18,43 +16,100 @@ public class Calculo {
                 "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
                 "N", "O", "P", "Q", "R", "S", "T", "U"
         ));
-        if(!entradas.contains(inicio) || !entradas.contains(fim)){
+        if (!entradas.contains(inicio) || !entradas.contains(fim)) {
             return "Os valores de entrada são inválidos";
         }
 
-        //g(n) - Ponto inicial
-        int g = calculaDistancia(inicio, fim);
-        System.out.println("\nDistância: " + g + "\n");
-
         ArrayList<String> caminho = new ArrayList<>();
-
+        caminho.add(inicio);
 
         HashMap<String, ArrayList<String>> direcoes = Mapeamento.mapeiaDirecoes();
-        // Calcular A* para cada direção
+        HashSet<String> visitados = new HashSet<>(caminho);
+
+        int g = 0;
+        String pontoAtual = inicio;
+        String proximoPonto;
+        while (!Objects.equals(pontoAtual, fim)) {
+            proximoPonto = calculaProximoPonto(direcoes, visitados, pontoAtual, fim, g, heuristica);
+
+            // Caso o algoritmo não encontre um próximo ponto, ele recua um ponto.
+            while (proximoPonto == null) {
+                String removido = caminho.removeLast();
+
+                if (caminho.isEmpty()) {
+                    return "Caminho não encontrado";
+                }
+
+                pontoAtual = caminho.getLast();
+                g -= calculaDistancia(pontoAtual, removido);
+                proximoPonto = calculaProximoPonto(direcoes, visitados, pontoAtual, fim, g, heuristica);
+            }
+
+            g += calculaDistancia(pontoAtual, proximoPonto);
+            pontoAtual = proximoPonto;
+            caminho.add(pontoAtual);
+            visitados.add(pontoAtual);
+        }
+
+        return caminho.toString();
+    }
+
+    private static String calculaProximoPonto(HashMap<String, ArrayList<String>> direcoes, HashSet<String> visitados, String origem, String destino, int gAtual, int heuristica) {
+        ArrayList<String> vizinhos = direcoes.get(origem);
+        HashMap<String, Double> resultados = new HashMap<>();
+
+        for (String vizinho : vizinhos) {
+            int gCalculo = gAtual + calculaDistancia(origem, vizinho);
+            double hCalculo = 0.0;
+
+            switch (heuristica) {
+                case 1:
+                    hCalculo = calculaHeuristicaManhattan(vizinho, destino);
+                    break;
+                case 2:
+                    hCalculo = calculaHeuristicaEuclidiana(vizinho, destino);
+                    break;
+                case 3:
+                    hCalculo = calculaHeuristicaChebyshevs(vizinho, destino);
+                    break;
+                default:
+                    break;
+            }
+
+            resultados.put(vizinho, gCalculo + hCalculo);
+        }
+
+        // Ordena os resultados do menor para o maior
+        resultados = resultados.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+
+        for (Map.Entry<String, Double> proximo : resultados.entrySet()) {
+            String proximoPonto = proximo.getKey();
+
+            if (!visitados.contains(proximoPonto) && !proximoPonto.isEmpty()) {
+                return proximoPonto;
+            }
+        }
 
         return null;
     }
 
-    private static Integer calculaDistancia(String origem, String destino){
+    private static Integer calculaDistancia(String origem, String destino) {
         String[][] matriz = Mapeamento.mapeiaDistancia();
+        int[] coordenadasAtual = getCoordenadas(matriz, origem);
+        int[] coordenadasFim = getCoordenadas(matriz, destino);
+        int x1 = coordenadasAtual[0];
+        int x2 = coordenadasFim[0];
+        int y1 = coordenadasAtual[1];
+        int y2 = coordenadasFim[1];
 
-        int origemX = -1, origemY = -1, destinoX = -1, destinoY = -1;
-
-        for (int i = 0; i < matriz.length; i++) {
-            for (int j = 0; j < matriz[i].length; j++) {
-                if (matriz[i][j].equals(origem)) {
-                    origemX = i;
-                    origemY = j;
-                }
-
-                if (matriz[i][j].equals(destino)) {
-                    destinoX = i;
-                    destinoY = j;
-                }
-            }
-        }
-
-        return Math.abs(origemX-destinoX)+Math.abs(origemY-destinoY);
+        return Math.abs(x1 - x2) + Math.abs(y1 - y2);
     }
 
     /*
@@ -62,14 +117,14 @@ public class Calculo {
 
         h(n) = |x1 - x2| + |y1 - y2|
      */
-    private Integer calculaHeuristicaManhattan(String atual, String fim) {
+    private static double calculaHeuristicaManhattan(String atual, String fim) {
         String[][] matriz = Mapeamento.mapeiaDistancia();
         int[] coordenadasAtual = getCoordenadas(matriz, atual);
         int[] coordenadasFim = getCoordenadas(matriz, fim);
-        int y1 = coordenadasAtual[0];
-        int y2 = coordenadasFim[0];
-        int x1 = coordenadasAtual[1];
-        int x2 = coordenadasFim[1];
+        int x1 = coordenadasAtual[0];
+        int x2 = coordenadasFim[0];
+        int y1 = coordenadasAtual[1];
+        int y2 = coordenadasFim[1];
 
         return Math.abs(x1 - x2) + Math.abs(y1 - y2);
     }
@@ -79,14 +134,14 @@ public class Calculo {
 
         h(n) = √(x1 − x2)^2 + (y1 − y2)^2
      */
-    private double calculaHeuristicaEuclidiana(String atual, String fim){
+    private static double calculaHeuristicaEuclidiana(String atual, String fim) {
         String[][] matriz = Mapeamento.mapeiaDistancia();
         int[] coordenadasAtual = getCoordenadas(matriz, atual);
         int[] coordenadasFim = getCoordenadas(matriz, fim);
-        int y1 = coordenadasAtual[0];
-        int y2 = coordenadasFim[0];
-        int x1 = coordenadasAtual[1];
-        int x2 = coordenadasFim[1];
+        int x1 = coordenadasAtual[0];
+        int x2 = coordenadasFim[0];
+        int y1 = coordenadasAtual[1];
+        int y2 = coordenadasFim[1];
 
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
@@ -96,29 +151,31 @@ public class Calculo {
 
         h(n) = max(|x1 − x2|, |y1 − y2|)
      */
-    private Integer calculaHeuristicaChebyshevs(String atual, String fim){        String[][] matriz = Mapeamento.mapeiaDistancia();
+    private static double calculaHeuristicaChebyshevs(String atual, String fim) {
+        String[][] matriz = Mapeamento.mapeiaDistancia();
         int[] coordenadasAtual = getCoordenadas(matriz, atual);
         int[] coordenadasFim = getCoordenadas(matriz, fim);
-        int y1 = coordenadasAtual[0];
-        int y2 = coordenadasFim[0];
-        int x1 = coordenadasAtual[1];
-        int x2 = coordenadasFim[1];
+        int x1 = coordenadasAtual[0];
+        int x2 = coordenadasFim[0];
+        int y1 = coordenadasAtual[1];
+        int y2 = coordenadasFim[1];
 
         return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
     }
 
     private static int[] getCoordenadas(String[][] distancias, String valor) {
-        int lin = 0, col = 0;
-        for(String[] i : distancias) {
-            for (String j: i) {
-                if (Objects.equals(valor, j)) {
-                    return new int[]{lin, col};
+        for (int lin = 0; lin < distancias.length; lin++) {
+            for (int col = 0; col < distancias[lin].length; col++) {
+                if (Objects.equals(valor, distancias[lin][col])) {
+                    return new int[]{col, lin};
                 }
-                col++;
             }
-            lin++;
         }
 
         return null;
+    }
+
+    static void main() {
+        System.out.println(calculaCaminho("H", "I", 2));
     }
 }
