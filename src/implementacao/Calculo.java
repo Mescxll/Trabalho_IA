@@ -17,6 +17,7 @@ public class Calculo {
                 "N", "O", "P", "Q", "R", "S", "T", "U"
         ));
         if (!entradas.contains(inicio) || !entradas.contains(fim)) {
+            System.out.println("Os valores de entrada são inválidos");
             return null;
         }
 
@@ -37,6 +38,7 @@ public class Calculo {
                 String removido = caminho.removeLast();
 
                 if (caminho.isEmpty()) {
+                    System.out.println("Caminho não encontrado");
                     return null;
                 }
 
@@ -173,6 +175,20 @@ public class Calculo {
         }
 
         return null;
+    }
+
+    public static void apresentaTrajetoCusto(ArrayList<String> caminhoSimples) {
+        int sum=0;
+        String trajeto = caminhoSimples.get(0);
+        for (int i = 0; i < caminhoSimples.size()-1; i++) {
+            String pontoInit= caminhoSimples.get(i);
+            String pontoFim=caminhoSimples.get(i+1);
+            sum+=calculaDistancia(pontoInit, pontoFim);
+            
+
+            trajeto += " -> " + pontoFim + "( "+ sum +" )";
+        }
+        System.out.println(trajeto);
     }
 
     static void main() {
