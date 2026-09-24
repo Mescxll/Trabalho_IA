@@ -11,13 +11,13 @@ public class Calculo {
         g(n) = distância acumulada de n ao nó inicial
         h(n) = distância estimada de n ao nó pela função heurística
          */
-    public static String calculaCaminho(String inicio, String fim, int heuristica) {
+    public static ArrayList<String> calculaCaminho(String inicio, String fim, int heuristica) {
         ArrayList<String> entradas = new ArrayList<>(Arrays.asList(
                 "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
                 "N", "O", "P", "Q", "R", "S", "T", "U"
         ));
         if (!entradas.contains(inicio) || !entradas.contains(fim)) {
-            return "Os valores de entrada são inválidos";
+            return null;
         }
 
         ArrayList<String> caminho = new ArrayList<>();
@@ -37,7 +37,7 @@ public class Calculo {
                 String removido = caminho.removeLast();
 
                 if (caminho.isEmpty()) {
-                    return "Caminho não encontrado";
+                    return null;
                 }
 
                 pontoAtual = caminho.getLast();
@@ -51,7 +51,7 @@ public class Calculo {
             visitados.add(pontoAtual);
         }
 
-        return caminho.toString();
+        return caminho;
     }
 
     private static String calculaProximoPonto(HashMap<String, ArrayList<String>> direcoes, HashSet<String> visitados, String origem, String destino, int gAtual, int heuristica) {
