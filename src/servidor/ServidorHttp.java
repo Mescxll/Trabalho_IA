@@ -88,13 +88,14 @@ public class ServidorHttp {
 
         for (int i = 0; i < caminho.size(); i++) {
             String ponto = caminho.get(i);
-            int[] coordenadas = getCoordenadas(matriz, ponto);
+            int[] coordenadas = Calculo.getCoordenadas(matriz, ponto);
 
             if (i > 0) {
-                acumulado += calculaDistancia(matriz, caminho.get(i - 1), ponto);
+                acumulado += Calculo.calculaDistancia(caminho.get(i - 1), ponto);
                 pontosJson.append(",");
             }
 
+            assert coordenadas != null;
             pontosJson.append("{")
                     .append("\"ponto\":\"").append(ponto).append("\",")
                     .append("\"acumulado\":").append(acumulado).append(",")
@@ -117,23 +118,6 @@ public class ServidorHttp {
         }
 
         return "[" + sb + "]";
-    }
-
-    private static int calculaDistancia(String[][] matriz, String origem, String destino) {
-        int[] c1 = getCoordenadas(matriz, origem);
-        int[] c2 = getCoordenadas(matriz, destino);
-        return Math.abs(c1[0] - c2[0]) + Math.abs(c1[1] - c2[1]);
-    }
-
-    private static int[] getCoordenadas(String[][] matriz, String valor) {
-        for (int lin = 0; lin < matriz.length; lin++) {
-            for (int col = 0; col < matriz[lin].length; col++) {
-                if (valor.equals(matriz[lin][col])) {
-                    return new int[]{col, lin};
-                }
-            }
-        }
-        return new int[]{-1, -1};
     }
 
     private static void tratarEstatico(HttpExchange exchange) throws IOException {

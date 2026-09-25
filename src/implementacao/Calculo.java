@@ -105,7 +105,7 @@ public class Calculo {
         return null;
     }
 
-    private static Integer calculaDistancia(String origem, String destino) {
+    public static Integer calculaDistancia(String origem, String destino) {
         String[][] matriz = Mapeamento.mapeiaDistancia();
         int[] coordenadasAtual = getCoordenadas(matriz, origem);
         int[] coordenadasFim = getCoordenadas(matriz, destino);
@@ -168,7 +168,7 @@ public class Calculo {
         return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
     }
 
-    private static int[] getCoordenadas(String[][] distancias, String valor) {
+    public static int[] getCoordenadas(String[][] distancias, String valor) {
         for (int lin = 0; lin < distancias.length; lin++) {
             for (int col = 0; col < distancias[lin].length; col++) {
                 if (Objects.equals(valor, distancias[lin][col])) {
@@ -192,9 +192,5 @@ public class Calculo {
             trajeto += " -> " + pontoFim + "( "+ sum +" )";
         }
         System.out.println(trajeto);
-    }
-
-    static void main() {
-        System.out.println(calculaCaminho("H", "I", 2));
     }
 }
