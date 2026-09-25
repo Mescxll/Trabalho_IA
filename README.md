@@ -22,6 +22,12 @@ Implementação do algoritmo de busca A* em Java para encontrar rotas em um mapa
 
 ### 1. Compilar
 
+> Se estiver usando o Visual Studio Code, crie a pasta `bin` na raíz do projeto:
+
+```bash
+mkdir bin 
+```
+
 Na raiz do projeto:
 
 ```bash
