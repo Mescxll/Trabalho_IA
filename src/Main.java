@@ -2,6 +2,9 @@ import implementacao.Calculo;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/*
+ Arquivo responsável por executar o programa via terminal
+ */
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);

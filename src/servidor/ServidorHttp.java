@@ -91,7 +91,7 @@ public class ServidorHttp {
             int[] coordenadas = Calculo.getCoordenadas(matriz, ponto);
 
             if (i > 0) {
-                acumulado += calculaDistancia(caminho.get(i - 1), ponto);
+                acumulado += Calculo.calculaDistancia(caminho.get(i - 1), ponto);
                 pontosJson.append(",");
             }
 
@@ -118,10 +118,6 @@ public class ServidorHttp {
         }
 
         return "[" + sb + "]";
-    }
-
-    private static int calculaDistancia(String origem, String destino) {
-        return Calculo.calculaDistancia (origem, destino);
     }
 
     private static void tratarEstatico(HttpExchange exchange) throws IOException {
