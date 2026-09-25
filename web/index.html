@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cidade Virtual - Busca A*</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Cidade Virtual</h1>
+        <p>Algoritmo A* - Traçado de rotas</p>
+    </header>
+
+    <main>
+        <section id="mapa-container">
+            <div id="mapa"></div>
+        </section>
+
+        <section id="painel">
+            <div class="campo">
+                <label>Origem:</label>
+                <span id="origem-selecionada">-</span>
+            </div>
+
+            <div class="campo">
+                <label>Destino:</label>
+                <span id="destino-selecionado">-</span>
+            </div>
+
+            <div class="campo">
+                <label for="heuristica">Heurística:</label>
+                <select id="heuristica">
+                    <option value="1">Distância de Manhattan</option>
+                    <option value="2">Distância Euclidiana</option>
+                    <option value="3">Distância de Chebyshev</option>
+                </select>
+            </div>
+
+            <div class="campo botoes">
+                <button id="btn-calcular">Calcular caminho</button>
+                <button id="btn-limpar">Limpar seleção</button>
+            </div>
+
+            <div class="campo">
+                <label>Resultado:</label>
+                <div id="resultado">Selecione a origem e o destino no mapa.</div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

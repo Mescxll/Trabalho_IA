@@ -1,0 +1,156 @@
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f4f4f4;
+    color: #222;
+}
+
+header {
+    background: #1e3a5f;
+    color: #fff;
+    padding: 16px 24px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+header p {
+    margin: 4px 0 0;
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 24px;
+}
+
+#mapa-container {
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+#mapa {
+    width: 760px;
+    max-width: 100%;
+    aspect-ratio: 7 / 5;
+}
+
+#mapa svg {
+    display: block;
+}
+
+circle.no {
+    fill: #dce7f5;
+    stroke: #1e3a5f;
+    stroke-width: 2.5;
+    cursor: pointer;
+    transition: fill 0.15s, r 0.1s;
+}
+
+circle.no:hover {
+    fill: #c3d7ee;
+    r: 20;
+}
+
+circle.no.origem {
+    fill: #2e7d32;
+    stroke: #1b5e20;
+}
+
+circle.no.destino {
+    fill: #c62828;
+    stroke: #8e0000;
+}
+
+text.rotulo-no {
+    font-weight: bold;
+    font-size: 16px;
+    fill: #1e3a5f;
+}
+
+circle.no.origem + text.rotulo-no,
+circle.no.destino + text.rotulo-no {
+    fill: #fff;
+}
+
+#painel {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: fit-content;
+}
+
+.campo label {
+    display: block;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 4px;
+}
+
+.campo select {
+    width: 100%;
+    padding: 6px;
+}
+
+.botoes {
+    display: flex;
+    gap: 8px;
+}
+
+button {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#btn-calcular {
+    background: #1e3a5f;
+    color: #fff;
+}
+
+#btn-calcular:hover {
+    background: #16304d;
+}
+
+#btn-limpar {
+    background: #e0e0e0;
+    color: #333;
+}
+
+#btn-limpar:hover {
+    background: #cfcfcf;
+}
+
+#resultado {
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    min-height: 40px;
+    white-space: pre-wrap;
+}
+
+#resultado.erro {
+    color: #c62828;
+}
