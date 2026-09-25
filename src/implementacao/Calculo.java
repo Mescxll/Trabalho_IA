@@ -193,8 +193,4 @@ public class Calculo {
         }
         System.out.println(trajeto);
     }
-
-    static void main() {
-        System.out.println(calculaCaminho("H", "I", 2));
-    }
 }
