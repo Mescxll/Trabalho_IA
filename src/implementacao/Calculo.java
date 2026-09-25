@@ -14,6 +14,7 @@ public class Calculo {
         h(n) = distância estimada de n ao nó pela função heurística
          */
     public static ArrayList<String> calculaCaminho(String inicio, String fim, int heuristica) {
+        arestasTestadas.clear();
         ArrayList<String> entradas = new ArrayList<>(Arrays.asList(
                 "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
                 "N", "O", "P", "Q", "R", "S", "T", "U"
@@ -63,7 +64,7 @@ public class Calculo {
         HashMap<String, Double> resultados = new HashMap<>();
 
         for (String vizinho : vizinhos) {
-            arestasTestadas.clear();
+            arestasTestadas.add(new String[]{origem, vizinho});
             int gCalculo = gAtual + calculaDistancia(origem, vizinho);
             double hCalculo = 0.0;
 

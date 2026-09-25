@@ -102,20 +102,17 @@ function criarDefsSetas() {
     const defs = criarSvg("defs");
     defs.innerHTML = `
         <marker id="seta" viewBox="0 0 10 10" refX="8" refY="5"
-                markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                markerWidth="15" markerHeight="15" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
             <path d="M0,0 L10,5 L0,10 Z" fill="#444"></path>
         </marker>
         <marker id="seta-azul" viewBox="0 0 10 10" refX="8" refY="5"
-                markerWidth="9" markerHeight="9" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 Z" fill="#1976d2"></path>
+                markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#0d47a1"></path>
         </marker>
-        <filter id="brilhoAzul" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3.5" result="blur"></feGaussianBlur>
-            <feMerge>
-                <feMergeNode in="blur"></feMergeNode>
-                <feMergeNode in="SourceGraphic"></feMergeNode>
-            </feMerge>
-        </filter>
+        <marker id="seta-amarela" viewBox="0 0 10 10" refX="8" refY="5"
+                markerWidth="9" markerHeight="9" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#f9c74f"></path>
+        </marker>
     `;
     return defs;
 }
@@ -246,15 +243,15 @@ function resetaCoresArestas() {
     Object.values(mapaArestasEl).forEach((linha) => {
         linha.setAttribute("stroke", "#555");
         linha.setAttribute("stroke-width", 2.5);
-        linha.removeAttribute("filter");
+        linha.removeAttribute("stroke-linecap");
 
         if (linha.dataset.temSetaInicio === "1") linha.setAttribute("marker-start", "url(#seta)");
         if (linha.dataset.temSetaFim === "1") linha.setAttribute("marker-end", "url(#seta)");
     });
 }
 
-// Pinta o resultado no mapa: azul (grosso + brilho) para o caminho final,
-// amarelo para as arestas testadas e não selecionadas.
+// Pinta o resultado no mapa: azul (grosso) para o caminho final,
+// amarelo (grosso) para as arestas testadas e não selecionadas.
 function destacaResultado(caminho, testadas) {
     resetaCoresArestas();
 
@@ -264,31 +261,37 @@ function destacaResultado(caminho, testadas) {
         chavesCaminho.add(chave);
     }
 
-    // arestas testadas e não escolhidas: amarelo, discreto
+    // arestas testadas e não escolhidas: amarelo
     (testadas || []).forEach(({ de, para }) => {
         const chave = [de, para].sort().join("-");
         if (chavesCaminho.has(chave)) return;
         const linha = mapaArestasEl[chave];
-        if (linha) {
-            linha.setAttribute("stroke", "#f9c74f");
-            linha.setAttribute("stroke-width", 3.5);
-        }
+        if (!linha) return;
+
+        linha.setAttribute("stroke", "#f9c74f");
+        linha.setAttribute("stroke-width", 6);
+        linha.setAttribute("stroke-linecap", "round");
+
+        if (linha.dataset.temSetaInicio === "1") linha.setAttribute("marker-start", "url(#seta-amarela)");
+        if (linha.dataset.temSetaFim === "1") linha.setAttribute("marker-end", "url(#seta-amarela)");
     });
 
-    // caminho final: azul, grosso e com brilho — desenhado por último pra ficar em destaque
+    // caminho final: azul, bem mais grosso — desenhado por último pra ficar por cima
     chavesCaminho.forEach((chave) => {
         const linha = mapaArestasEl[chave];
-        if (linha) {
-            linha.setAttribute("stroke", "#1976d2");
-            linha.setAttribute("stroke-width", 6.5);
-            linha.setAttribute("filter", "url(#brilhoAzul)");
-
-            if (linha.dataset.temSetaInicio === "1") linha.setAttribute("marker-start", "url(#seta-azul)");
-            if (linha.dataset.temSetaFim === "1") linha.setAttribute("marker-end", "url(#seta-azul)");
-
-            // traz pro topo da pilha, pra não ficar por baixo de outra linha
-            linha.parentNode.appendChild(linha);
+        if (!linha) {
+            console.warn("Aresta do caminho não encontrada no mapa:", chave);
+            return;
         }
+
+        linha.setAttribute("stroke", "#0d47a1");
+        linha.setAttribute("stroke-width", 9);
+        linha.setAttribute("stroke-linecap", "round");
+
+        if (linha.dataset.temSetaInicio === "1") linha.setAttribute("marker-start", "url(#seta-azul)");
+        if (linha.dataset.temSetaFim === "1") linha.setAttribute("marker-end", "url(#seta-azul)");
+
+        linha.parentNode.appendChild(linha); // traz pro topo, não fica escondida
     });
 }
 
