@@ -105,6 +105,17 @@ function criarDefsSetas() {
                 markerWidth="8" markerHeight="8" orient="auto-start-reverse">
             <path d="M0,0 L10,5 L0,10 Z" fill="#444"></path>
         </marker>
+        <marker id="seta-azul" viewBox="0 0 10 10" refX="8" refY="5"
+                markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#1976d2"></path>
+        </marker>
+        <filter id="brilhoAzul" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3.5" result="blur"></feGaussianBlur>
+            <feMerge>
+                <feMergeNode in="blur"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
     `;
     return defs;
 }
@@ -161,6 +172,10 @@ function desenhaArestas(grupo, posicoes) {
 
             if (voltaExiste) linha.setAttribute("marker-start", "url(#seta)");
             if (vaiEExiste) linha.setAttribute("marker-end", "url(#seta)");
+
+            // guarda quais pontas têm seta, pra poder restaurar/recolorir depois
+            linha.dataset.temSetaInicio = voltaExiste ? "1" : "0";
+            linha.dataset.temSetaFim = vaiEExiste ? "1" : "0";
 
             grupo.appendChild(linha);
             mapaArestasEl[chave] = linha;
@@ -231,10 +246,14 @@ function resetaCoresArestas() {
     Object.values(mapaArestasEl).forEach((linha) => {
         linha.setAttribute("stroke", "#555");
         linha.setAttribute("stroke-width", 2.5);
+        linha.removeAttribute("filter");
+
+        if (linha.dataset.temSetaInicio === "1") linha.setAttribute("marker-start", "url(#seta)");
+        if (linha.dataset.temSetaFim === "1") linha.setAttribute("marker-end", "url(#seta)");
     });
 }
 
-// Pinta o resultado no mapa: azul para o caminho final,
+// Pinta o resultado no mapa: azul (grosso + brilho) para o caminho final,
 // amarelo para as arestas testadas e não selecionadas.
 function destacaResultado(caminho, testadas) {
     resetaCoresArestas();
@@ -245,6 +264,7 @@ function destacaResultado(caminho, testadas) {
         chavesCaminho.add(chave);
     }
 
+    // arestas testadas e não escolhidas: amarelo, discreto
     (testadas || []).forEach(({ de, para }) => {
         const chave = [de, para].sort().join("-");
         if (chavesCaminho.has(chave)) return;
@@ -255,11 +275,19 @@ function destacaResultado(caminho, testadas) {
         }
     });
 
+    // caminho final: azul, grosso e com brilho — desenhado por último pra ficar em destaque
     chavesCaminho.forEach((chave) => {
         const linha = mapaArestasEl[chave];
         if (linha) {
             linha.setAttribute("stroke", "#1976d2");
-            linha.setAttribute("stroke-width", 4.5);
+            linha.setAttribute("stroke-width", 6.5);
+            linha.setAttribute("filter", "url(#brilhoAzul)");
+
+            if (linha.dataset.temSetaInicio === "1") linha.setAttribute("marker-start", "url(#seta-azul)");
+            if (linha.dataset.temSetaFim === "1") linha.setAttribute("marker-end", "url(#seta-azul)");
+
+            // traz pro topo da pilha, pra não ficar por baixo de outra linha
+            linha.parentNode.appendChild(linha);
         }
     });
 }
