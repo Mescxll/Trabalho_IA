@@ -63,7 +63,7 @@ public class ServidorHttp {
                 json = "{\"erro\":\"Caminho não encontrado\"}";
             } else {
                 Calculo.apresentaTrajetoCusto(caminho);
-                json = montaJsonCaminho(caminho);
+                json = montaJsonResultado(caminho);
             }
 
             enviarResposta(exchange, 200, json, "application/json");
@@ -73,6 +73,12 @@ public class ServidorHttp {
         } catch (Exception e) {
             enviarResposta(exchange, 500, "{\"erro\":\"Erro interno: " + e.getMessage() + "\"}", "application/json");
         }
+    }
+
+    private static String montaJsonResultado(ArrayList<String> caminho) {
+        String pontosJson = montaJsonCaminho(caminho);
+        String testadasJson = montaJsonArestasTestadas();
+        return "{\"caminho\":[" + pontosJson + "],\"testadas\":" + testadasJson + "}";
     }
 
     private static String montaJsonCaminho(ArrayList<String> caminho) {
@@ -97,7 +103,20 @@ public class ServidorHttp {
                     .append("}");
         }
 
-        return "{\"caminho\":[" + pontosJson + "]}";
+        return pontosJson.toString();
+    }
+
+    private static String montaJsonArestasTestadas() {
+        StringBuilder sb = new StringBuilder();
+        ArrayList<String[]> arestas = Calculo.arestasTestadas;
+
+        for (int i = 0; i < arestas.size(); i++) {
+            String[] aresta = arestas.get(i);
+            if (i > 0) sb.append(",");
+            sb.append("{\"de\":\"").append(aresta[0]).append("\",\"para\":\"").append(aresta[1]).append("\"}");
+        }
+
+        return "[" + sb + "]";
     }
 
     private static int calculaDistancia(String[][] matriz, String origem, String destino) {

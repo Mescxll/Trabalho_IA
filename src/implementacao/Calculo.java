@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Calculo {
+
+    public static ArrayList<String[]> arestasTestadas = new ArrayList<>();
     /*
         Algoritmo A*
 
@@ -61,6 +63,7 @@ public class Calculo {
         HashMap<String, Double> resultados = new HashMap<>();
 
         for (String vizinho : vizinhos) {
+            arestasTestadas.clear();
             int gCalculo = gAtual + calculaDistancia(origem, vizinho);
             double hCalculo = 0.0;
 

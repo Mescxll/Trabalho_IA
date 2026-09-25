@@ -31,12 +31,15 @@ const DIRECOES = {
     U: ["T"],
 };
 
-const ESPACAMENTO = 100; 
+const ESPACAMENTO = 100;
 const MARGEM = 40;
 const RAIO_NO = 18;
 
 let origem = null;
 let destino = null;
+
+// chave "A-B" (ordenada) -> elemento <line> correspondente no SVG
+const mapaArestasEl = {};
 
 const mapaEl = document.getElementById("mapa");
 const origemEl = document.getElementById("origem-selecionada");
@@ -153,12 +156,14 @@ function desenhaArestas(grupo, posicoes) {
                 x1: x1 + ux * folga, y1: y1 + uy * folga,
                 x2: x2 - ux * folga, y2: y2 - uy * folga,
                 stroke: "#555", "stroke-width": 2.5,
+                "data-aresta": chave,
             });
 
             if (voltaExiste) linha.setAttribute("marker-start", "url(#seta)");
             if (vaiEExiste) linha.setAttribute("marker-end", "url(#seta)");
 
             grupo.appendChild(linha);
+            mapaArestasEl[chave] = linha;
         });
     });
 }
@@ -217,8 +222,46 @@ function limparSelecao() {
     origem = null;
     destino = null;
     atualizarSelecaoVisual();
+    resetaCoresArestas();
     resultadoEl.textContent = "Selecione a origem e o destino no mapa.";
     resultadoEl.classList.remove("erro");
+}
+
+function resetaCoresArestas() {
+    Object.values(mapaArestasEl).forEach((linha) => {
+        linha.setAttribute("stroke", "#555");
+        linha.setAttribute("stroke-width", 2.5);
+    });
+}
+
+// Pinta o resultado no mapa: azul para o caminho final,
+// amarelo para as arestas testadas e não selecionadas.
+function destacaResultado(caminho, testadas) {
+    resetaCoresArestas();
+
+    const chavesCaminho = new Set();
+    for (let i = 0; i < caminho.length - 1; i++) {
+        const chave = [caminho[i].ponto, caminho[i + 1].ponto].sort().join("-");
+        chavesCaminho.add(chave);
+    }
+
+    (testadas || []).forEach(({ de, para }) => {
+        const chave = [de, para].sort().join("-");
+        if (chavesCaminho.has(chave)) return;
+        const linha = mapaArestasEl[chave];
+        if (linha) {
+            linha.setAttribute("stroke", "#f9c74f");
+            linha.setAttribute("stroke-width", 3.5);
+        }
+    });
+
+    chavesCaminho.forEach((chave) => {
+        const linha = mapaArestasEl[chave];
+        if (linha) {
+            linha.setAttribute("stroke", "#1976d2");
+            linha.setAttribute("stroke-width", 4.5);
+        }
+    });
 }
 
 async function calcularCaminho() {
@@ -244,8 +287,8 @@ async function calcularCaminho() {
         }
 
         resultadoEl.textContent = formataTrajeto(dados.caminho);
-
-            window.ultimoCaminho = dados.caminho;
+        window.ultimoCaminho = dados.caminho;
+        destacaResultado(dados.caminho, dados.testadas);
 
     } catch (erro) {
         resultadoEl.textContent = "Erro ao conectar com o servidor.";
