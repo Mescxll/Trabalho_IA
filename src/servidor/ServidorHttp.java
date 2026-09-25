@@ -91,10 +91,11 @@ public class ServidorHttp {
             int[] coordenadas = Calculo.getCoordenadas(matriz, ponto);
 
             if (i > 0) {
-                acumulado += calculaDistancia(matriz, caminho.get(i - 1), ponto);
+                acumulado += calculaDistancia(caminho.get(i - 1), ponto);
                 pontosJson.append(",");
             }
 
+            assert coordenadas != null;
             pontosJson.append("{")
                     .append("\"ponto\":\"").append(ponto).append("\",")
                     .append("\"acumulado\":").append(acumulado).append(",")
@@ -119,7 +120,7 @@ public class ServidorHttp {
         return "[" + sb + "]";
     }
 
-    private static int calculaDistancia(String[][] matriz, String origem, String destino) {
+    private static int calculaDistancia(String origem, String destino) {
         return Calculo.calculaDistancia (origem, destino);
     }
 
